@@ -1,6 +1,6 @@
 namespace FurRealCute.Web.Api.Storage;
 
-public interface IStorageBroker
+public partial interface IStorageBroker
 {
     
 }

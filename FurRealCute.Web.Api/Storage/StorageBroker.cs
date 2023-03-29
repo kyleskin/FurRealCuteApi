@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FurRealCute.Web.Api.Storage;
 
-public class StorageBroker : DbContext, IStorageBroker
+public partial class StorageBroker : DbContext, IStorageBroker
 {
 
     private readonly IConfiguration _configuration;
