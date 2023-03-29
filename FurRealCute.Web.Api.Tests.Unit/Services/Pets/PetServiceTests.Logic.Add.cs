@@ -11,10 +11,10 @@ public partial class PetServiceTests
     {
         // Arrange
         DateTimeOffset randomDateTime = GetRandomDateTime();
-        Pet? randomPet = CreateRandomPet(randomDateTime);
-        Pet? inputPet = randomPet;
-        Pet? storagePet = randomPet;
-        Pet? expectedPet = storagePet;
+        Pet randomPet = CreateRandomPet(randomDateTime);
+        Pet inputPet = randomPet;
+        Pet storagePet = randomPet;
+        Pet expectedPet = storagePet;
         
         _storageBrokerMock.Setup(broker =>
             broker.InsertPetAsync(inputPet))

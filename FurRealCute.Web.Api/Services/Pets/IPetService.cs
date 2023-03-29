@@ -4,5 +4,5 @@ namespace FurRealCute.Web.Api.Services.Pets;
 
 public interface IPetService
 {
-    ValueTask<Pet?> CreatePetAsync(Pet? pet);
+    ValueTask<Pet> CreatePetAsync(Pet? pet);
 }

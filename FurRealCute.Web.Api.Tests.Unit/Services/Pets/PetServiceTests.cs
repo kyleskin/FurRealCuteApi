@@ -37,7 +37,7 @@ public partial class PetServiceTests
         return DateTimeOffset.UtcNow.AddDays(-randomOffset);
     }
     
-    private static Pet? CreateRandomPet(DateTimeOffset dateTime) =>
+    private static Pet CreateRandomPet(DateTimeOffset dateTime) =>
         CreateRandomPetFiller(dateTime).Generate();
 
     private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
