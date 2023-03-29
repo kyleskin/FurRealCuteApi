@@ -11,6 +11,7 @@ public partial class PetService
         ValidatePetIsNotNull(pet);
         ValidatePetId(pet!.Id);
         ValidatePetRequiredFields(pet);
+        ValidatePetAuditFieldsOnCreate(pet);
     }
     
     private static void ValidatePetIsNotNull(Pet? pet)
@@ -51,10 +52,27 @@ public partial class PetService
                     parameterValue: pet.Size);
         }
     }
+
+    private static void ValidatePetAuditFieldsOnCreate(Pet pet)
+    {
+        switch (pet)
+        {
+            case { } when IsInvalid(pet.CreatedDate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.CreatedDate),
+                    parameterValue: pet.CreatedDate);
+        }
+    }
     
     private static bool IsInvalid(Guid petId) => petId == Guid.Empty;
     private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
-    private static bool IsInvalid(DateTimeOffset dateTime) => dateTime > DateTimeOffset.UtcNow;
+
+    private static bool IsInvalid(DateTimeOffset dateTime)
+    {
+        return dateTime > DateTimeOffset.UtcNow
+            || dateTime == default;
+    }
+
     private static bool IsInvalid(Type type) => type == default;
     private static bool IsInvalid(Size size) => size == default;
 }
