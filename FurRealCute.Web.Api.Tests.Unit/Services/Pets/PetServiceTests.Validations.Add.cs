@@ -47,7 +47,7 @@ public partial class PetServiceTests
         Pet inputPet = randomPet;
         inputPet.Id = Guid.Empty;
 
-        InvalidPetInputException invalidPetInputException = new(
+        InvalidPetException invalidPetInputException = new(
             parameterName: nameof(Pet.Id),
             parameterValue: inputPet.Id);
 

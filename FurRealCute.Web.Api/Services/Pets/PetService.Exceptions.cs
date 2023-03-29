@@ -17,6 +17,10 @@ public partial class PetService
         {
             throw CreateAndLogPetValidationException(nullPetException);
         }
+        catch (InvalidPetException invalidPetException)
+        {
+            throw CreateAndLogPetValidationException(invalidPetException);
+        }
     }
 
     private PetValidationException CreateAndLogPetValidationException(Exception exception)
