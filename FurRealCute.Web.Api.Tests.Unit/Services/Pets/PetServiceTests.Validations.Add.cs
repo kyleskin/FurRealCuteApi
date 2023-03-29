@@ -268,6 +268,37 @@ public partial class PetServiceTests
     }
     
     [Fact]
+    public async Task ShouldThrowValidationExceptionOnAddWhenCreatedDateIsNotSameAsUpdatedDateAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.UpdatedDate = dateTime.AddDays(1);
+        
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.UpdatedDate), 
+            parameterValue: inputPet.UpdatedDate);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+        
+        // Act
+        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => 
+            createPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+    
+    [Fact]
     public async Task ShouldThrowValidationExceptionOnAddWhenCreatedByIsInvalidAndLogItAsync()
     {
         // Arrange
