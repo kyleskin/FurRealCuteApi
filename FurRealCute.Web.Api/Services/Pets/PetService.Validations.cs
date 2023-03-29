@@ -38,14 +38,17 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Name),
                     parameterValue: pet.Name);
+            
             case { } when IsInvalid(pet.Birthdate):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Birthdate),
                     parameterValue: pet.Birthdate);
+            
             case { } when IsInvalid(pet.Type):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Type),
                     parameterValue: pet.Type);
+            
             case { } when IsInvalid(pet.Size):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Size),
@@ -53,7 +56,7 @@ public partial class PetService
         }
     }
 
-    private static void ValidatePetAuditFieldsOnCreate(Pet pet)
+    private void ValidatePetAuditFieldsOnCreate(Pet pet)
     {
         switch (pet)
         {
@@ -61,26 +64,36 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.CreatedDate),
                     parameterValue: pet.CreatedDate);
+            
             case { } when IsInvalid(pet.UpdatedDate):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedDate),
                     parameterValue: pet.UpdatedDate);
+            
             case { } when IsInvalid(pet.CreatedBy):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.CreatedBy),
                     parameterValue: pet.CreatedBy);
+            
             case { } when IsInvalid(pet.UpdatedBy):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedBy),
                     parameterValue: pet.UpdatedBy);
+            
             case { } when pet.UpdatedDate != pet.CreatedDate:
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedDate),
                     parameterValue: pet.UpdatedDate);
+            
             case { } when pet.UpdatedBy != pet.CreatedBy:
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedBy),
                     parameterValue: pet.UpdatedBy);
+            
+            case { } when IsNotRecentDate(pet.CreatedDate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.CreatedDate),
+                    parameterValue: pet.CreatedDate);
         }
     }
     
@@ -93,4 +106,13 @@ public partial class PetService
     }
     private static bool IsInvalid(Type type) => type == default;
     private static bool IsInvalid(Size size) => size == default;
+
+    private bool IsNotRecentDate(DateTimeOffset dateTime)
+    {
+        DateTimeOffset currentDateTime = _dateTimeBroker.GetCurrentDateTime();
+        TimeSpan timeDifference = currentDateTime.Subtract(dateTime);
+        TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+        return timeDifference.Duration() > oneMinute;
+    }
 }

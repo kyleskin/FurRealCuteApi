@@ -15,19 +15,26 @@ public partial class PetServiceTests
         Pet inputPet = randomPet;
         Pet storagePet = randomPet;
         Pet expectedPet = storagePet;
+
+        _dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+            .Returns(randomDateTime);
         
         _storageBrokerMock.Setup(broker =>
             broker.InsertPetAsync(inputPet))
             .ReturnsAsync(storagePet);
 
         // Act
-        Pet? actualPet = await _petService.CreatePetAsync(inputPet);
+        Pet actualPet = await _petService.CreatePetAsync(inputPet);
 
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);
         
         _storageBrokerMock.Verify(broker => 
             broker.InsertPetAsync(inputPet), Times.Once);
+        
+        _dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTime(), Times.Once);
         
         _dateTimeBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();

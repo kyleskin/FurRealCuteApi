@@ -64,10 +64,10 @@ public partial class PetServiceTests
         var fakePet = new Faker<Pet>()
             .RuleFor(p => p.Id, f => Guid.NewGuid())
             .RuleFor(p => p.Name, f => f.Name.FirstName())
-            .RuleFor(p => p.Birthdate, f => f.Date.RecentOffset())
+            .RuleFor(p => p.Birthdate, f => dateTime.AddDays(-1))
             .RuleFor(p => p.Type, f => f.PickRandom<Type>())
             .RuleFor(p => p.Size, f => f.PickRandom<Size>())
-            .RuleFor(p => p.CreatedDate, f => f.Date.RecentOffset())
+            .RuleFor(p => p.CreatedDate, f => dateTime)
             .RuleFor(p => p.UpdatedDate, (f, p) => p.CreatedDate)
             .RuleFor(p => p.CreatedBy, f => Guid.NewGuid())
             .RuleFor(p => p.UpdatedBy, (f, p) => p.CreatedBy);
