@@ -1,3 +1,4 @@
+using FluentAssertions;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
 using Microsoft.AspNetCore.Components;
@@ -199,6 +200,37 @@ public partial class PetServiceTests
                 broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))), 
             Times.Once);
     
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnAddWhenCreatedDateIsInvalidAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.CreatedDate = default;
+        
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.CreatedDate), 
+            parameterValue: inputPet.CreatedDate);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+        
+        // Act
+        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => 
+            createPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker => 
+            broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
         _dateTimeBrokerMock.VerifyNoOtherCalls();
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
