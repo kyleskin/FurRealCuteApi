@@ -143,33 +143,64 @@ public partial class PetServiceTests
     }
 
     [Fact]
-        public async Task ShouldThrowValidationExceptionWhenPetTypeIsInvalidAndLogItAsync()
-        {
-            // Arrange
-            DateTimeOffset dateTime = GetRandomDateTime();
-            Pet randomPet = CreateRandomPet(dateTime);
-            Pet inputPet = randomPet;
-            inputPet.Type = default;
+    public async Task ShouldThrowValidationExceptionWhenPetTypeIsInvalidAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.Type = default;
 
-            InvalidPetException invalidPetException = new(
-                parameterName: nameof(Pet.Type),
-                parameterValue: inputPet.Type);
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.Type),
+            parameterValue: inputPet.Type);
 
-            PetValidationException expectedPetValidationException = new(invalidPetException);
-        
-            // Act
-            ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
-        
-            // Assert
-            await Assert.ThrowsAsync<PetValidationException>(() =>
-                createPetTask.AsTask());
-        
-            _loggingBrokerMock.Verify(broker =>
-                    broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))), 
-                Times.Once);
-        
-            _dateTimeBrokerMock.VerifyNoOtherCalls();
-            _loggingBrokerMock.VerifyNoOtherCalls();
-            _storageBrokerMock.VerifyNoOtherCalls();
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+    
+        // Act
+        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+    
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() =>
+            createPetTask.AsTask());
+    
+        _loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))), 
+            Times.Once);
+    
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+    
+    [Fact]
+    public async Task ShouldThrowValidationExceptionWhenPetSizeIsInvalidAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.Size = default;
+
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.Size),
+            parameterValue: inputPet.Size);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+    
+        // Act
+        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+    
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() =>
+            createPetTask.AsTask());
+    
+        _loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))), 
+            Times.Once);
+    
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
     }
 }

@@ -2,7 +2,7 @@ namespace FurRealCute.Web.Api.Models.Pets;
 
 public enum Size
 {
-    ExtraSmall,
+    ExtraSmall = 1,
     Small,
     Medium,
     Large,
