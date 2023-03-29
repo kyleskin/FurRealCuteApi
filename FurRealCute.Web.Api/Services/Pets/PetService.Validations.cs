@@ -77,6 +77,10 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedDate),
                     parameterValue: pet.UpdatedDate);
+            case { } when pet.UpdatedBy != pet.CreatedBy:
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedBy),
+                    parameterValue: pet.UpdatedBy);
         }
     }
     
