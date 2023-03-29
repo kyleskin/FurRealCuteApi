@@ -56,7 +56,7 @@ public partial class PetServiceTests
             .RuleFor(p => p.Type, f => f.PickRandom<Type>())
             .RuleFor(p => p.Size, f => f.PickRandom<Size>())
             .RuleFor(p => p.CreatedDate, f => f.Date.RecentOffset())
-            .RuleFor(p => p.UpdatedBy, (f, p) => p.CreatedBy)
+            .RuleFor(p => p.UpdatedDate, (f, p) => p.CreatedDate)
             .RuleFor(p => p.CreatedBy, f => Guid.NewGuid())
             .RuleFor(p => p.UpdatedBy, (f, p) => p.CreatedBy);
         

@@ -61,6 +61,10 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.CreatedDate),
                     parameterValue: pet.CreatedDate);
+            case { } when IsInvalid(pet.UpdatedDate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedDate),
+                    parameterValue: pet.UpdatedDate);
         }
     }
     
