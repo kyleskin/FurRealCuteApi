@@ -8,7 +8,7 @@ public partial class StorageBroker
 {
     public DbSet<Pet> Pets { get; set; }
     
-    public async ValueTask<Pet?> InsertPetAsync(Pet pet)
+    public async ValueTask<Pet> InsertPetAsync(Pet pet)
     {
         var broker = new StorageBroker(_configuration);
         EntityEntry<Pet> petEntityEntry = await broker.Pets.AddAsync(entity: pet);
