@@ -11,15 +11,11 @@ public partial class PetServiceTests
     {
         // Arrange
         DateTimeOffset randomDateTime = GetRandomDateTime();
-        DateTimeOffset dateTime = randomDateTime;
         Pet randomPet = CreateRandomPet(randomDateTime);
         Pet inputPet = randomPet;
         Pet storagePet = randomPet;
         Pet expectedPet = storagePet;
-
-        _dateTimeBrokerMock.Setup(broker =>
-            broker.GetCurrentDateTime()).Returns(dateTime);
-
+        
         _storageBrokerMock.Setup(broker =>
             broker.InsertPetAsync(inputPet))
             .ReturnsAsync(storagePet);
@@ -29,9 +25,6 @@ public partial class PetServiceTests
 
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);
-        
-        _dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrentDateTime(), Times.Once);
         
         _storageBrokerMock.Verify(broker => 
             broker.InsertPetAsync(inputPet), Times.Once);
