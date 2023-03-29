@@ -9,10 +9,9 @@ public partial class PetService
     {
         ValidatePetIsNotNull(pet);
         ValidatePetId(pet!.Id);
+        ValidatePetRequiredFields(pet);
     }
-
-    private static bool IsInvalid(Guid petId) => petId == Guid.Empty;
-
+    
     private static void ValidatePetIsNotNull(Pet? pet)
     {
         if (pet is null)
@@ -28,4 +27,18 @@ public partial class PetService
                 parameterValue: petId);
         }
     }
+
+    private static void ValidatePetRequiredFields(Pet pet)
+    {
+        switch (pet)
+        {
+            case { } when IsInvalid(pet.Name):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.Name),
+                    parameterValue: pet.Name);
+        }
+    }
+    
+    private static bool IsInvalid(Guid petId) => petId == Guid.Empty;
+    private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
 }
