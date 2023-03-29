@@ -31,11 +31,23 @@ public partial class PetServiceTests
             _loggingBrokerMock.Object);
     }
 
-    private static DateTimeOffset GetRandomDateTime()
+    public static TheoryData InvalidMinuteCases()
     {
-        int randomOffset = Random.Next(15);
-        return DateTimeOffset.UtcNow.AddDays(-randomOffset);
+        int randomMoreThanMinuteFromNow = GetRandomNumber();
+        int randomMoreThanMinuteBeforeNow = GetNegativeRandomNumber();
+
+        return new TheoryData<int>
+        {
+            randomMoreThanMinuteFromNow,
+            randomMoreThanMinuteBeforeNow
+        };
     }
+
+    private static DateTimeOffset GetRandomDateTime() => 
+        DateTimeOffset.UtcNow.AddDays(GetNegativeRandomNumber());
+    
+    private static int GetRandomNumber() => Random.Next(2, 10);
+    private static int GetNegativeRandomNumber() => -1 * GetRandomNumber();
     
     private static Pet CreateRandomPet(DateTimeOffset dateTime) =>
         CreateRandomPetFiller(dateTime).Generate();
