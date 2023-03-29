@@ -36,9 +36,14 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Name),
                     parameterValue: pet.Name);
+            case { } when IsInvalid(pet.Birthdate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.Birthdate),
+                    parameterValue: pet.Birthdate);
         }
     }
     
     private static bool IsInvalid(Guid petId) => petId == Guid.Empty;
     private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
+    private static bool IsInvalid(DateTimeOffset dateTime) => dateTime > DateTimeOffset.UtcNow;
 }
