@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Bogus;
 using Bogus.DataSets;
 using FurRealCute.Web.Api.Brokers.DateTimeBroker;
@@ -36,11 +37,17 @@ public partial class PetServiceTests
         int randomOffset = Random.Next(15);
         return DateTimeOffset.UtcNow.AddDays(-randomOffset);
     }
-
-
-    private static Pet CreateRandomPet(DateTimeOffset dateTime) =>
+    
+    private static Pet? CreateRandomPet(DateTimeOffset dateTime) =>
         CreateRandomPetFiller(dateTime).Generate();
 
+    private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+    {
+        return actualException =>
+            actualException.Message == expectedException.Message
+            && actualException.InnerException!.Message == expectedException.InnerException!.Message;
+    }
+    
     private static Faker<Pet> CreateRandomPetFiller(DateTimeOffset dateTime)
     {
         var fakePet = new Faker<Pet>()

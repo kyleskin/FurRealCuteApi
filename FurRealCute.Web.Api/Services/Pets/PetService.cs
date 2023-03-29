@@ -18,7 +18,7 @@ public class PetService : IPetService
         _loggingBroker = loggingBroker;
     }
 
-    public async ValueTask<Pet> CreatePetAsync(Pet pet)
+    public async ValueTask<Pet?> CreatePetAsync(Pet? pet)
     {
         return await _storageBroker.InsertPetAsync(pet);
     }
