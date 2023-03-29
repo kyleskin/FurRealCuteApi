@@ -45,6 +45,10 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.Type),
                     parameterValue: pet.Type);
+            case { } when IsInvalid(pet.Size):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.Size),
+                    parameterValue: pet.Size);
         }
     }
     
@@ -52,4 +56,5 @@ public partial class PetService
     private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
     private static bool IsInvalid(DateTimeOffset dateTime) => dateTime > DateTimeOffset.UtcNow;
     private static bool IsInvalid(Type type) => type == default;
+    private static bool IsInvalid(Size size) => size == default;
 }
