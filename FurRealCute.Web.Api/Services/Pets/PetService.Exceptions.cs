@@ -1,5 +1,9 @@
+using System.Data.SqlTypes;
+using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace FurRealCute.Web.Api.Services.Pets;
 
@@ -20,6 +24,11 @@ public partial class PetService
         catch (InvalidPetException invalidPetException)
         {
             throw CreateAndLogPetValidationException(invalidPetException);
+        }
+        catch (UniqueConstraintException uniqueConstraintException)
+        {
+            DuplicatePetException duplicatePetException = new(uniqueConstraintException);
+            throw CreateAndLogPetValidationException(duplicatePetException);
         }
     }
 

@@ -1,6 +1,8 @@
+using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
 using Moq;
+using Npgsql;
 
 namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 
@@ -437,15 +439,15 @@ public partial class PetServiceTests
         Pet randomPet = CreateRandomPet(dateTime);
         Pet existingPet = randomPet;
 
-        DuplicatePetException duplicatePetException = new();
-
+        UniqueConstraintException uniqueConstraintException = new();
+        DuplicatePetException duplicatePetException = new(uniqueConstraintException);
         PetValidationException expectedPetValidationException = new(duplicatePetException);
 
         _dateTimeBrokerMock.Setup(broker =>
             broker.GetCurrentDateTime()).Returns(dateTime);
 
         _storageBrokerMock.Setup(broker =>
-            broker.InsertPetAsync(existingPet)).ThrowsAsync(duplicatePetException);
+            broker.InsertPetAsync(existingPet)).ThrowsAsync(uniqueConstraintException);
         
         // Act
         ValueTask<Pet> createPetTask = _petService.CreatePetAsync(existingPet);

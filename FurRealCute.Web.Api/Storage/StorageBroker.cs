@@ -1,3 +1,4 @@
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace FurRealCute.Web.Api.Storage;
@@ -16,5 +17,6 @@ public partial class StorageBroker : DbContext, IStorageBroker
     {
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
         options.UseNpgsql(connectionString);
+        options.UseExceptionProcessor();
     }
 }
