@@ -5,7 +5,7 @@ using FurRealCute.Web.Api.Storage;
 
 namespace FurRealCute.Web.Api.Services.Pets;
 
-public class PetService : IPetService
+public partial class PetService : IPetService
 {
     private readonly IStorageBroker _storageBroker;
     private readonly IDateTimeBroker _dateTimeBroker;
@@ -18,8 +18,11 @@ public class PetService : IPetService
         _loggingBroker = loggingBroker;
     }
 
-    public async ValueTask<Pet?> CreatePetAsync(Pet? pet)
+    public ValueTask<Pet?> CreatePetAsync(Pet? pet) =>
+    TryCatch(async () =>
     {
-        return await _storageBroker.InsertPetAsync(pet);
-    }
+        ValidatePetOnCreate(pet);
+        
+        return await _storageBroker.InsertPetAsync(pet!);
+    });
 }
