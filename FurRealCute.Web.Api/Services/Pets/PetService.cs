@@ -42,6 +42,7 @@ public partial class PetService : IPetService
     public ValueTask<Pet?> ModifyPetAsync(Pet pet) =>
     TryCatch(async () =>
     {
+        ValidatePetOnModify(pet);
         Pet? existingPet = await _storageBroker.SelectPetByIdAsync(pet.Id);
         
         return await _storageBroker.UpdatePetAsync(pet);

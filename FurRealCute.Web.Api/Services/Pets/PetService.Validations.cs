@@ -12,6 +12,11 @@ public partial class PetService
         ValidatePetRequiredFields(pet);
         ValidatePetAuditFieldsOnCreate(pet);
     }
+
+    private void ValidatePetOnModify(Pet? pet)
+    {
+        ValidatePetIsNotNull(pet);
+    }
     
     private static void ValidatePetIsNotNull(Pet? pet)
     {
