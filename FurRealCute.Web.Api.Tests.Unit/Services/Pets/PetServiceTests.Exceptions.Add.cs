@@ -95,4 +95,48 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowServiceExceptionOnAddWhenExceptionOccursAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        Exception serviceException = new();
+
+        FailedPetServiceException failedPetServiceException = new(serviceException);
+
+        PetServiceException expectedPetServiceException = new(failedPetServiceException);
+
+        _dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+            .Returns(dateTime);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.InsertPetAsync(inputPet))
+            .ThrowsAsync(serviceException);
+        
+        // Act
+        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetServiceException>(() => createPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedPetServiceException))),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker =>
+            broker.InsertPetAsync(inputPet),
+            Times.Once);
+        
+        _dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTime(),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
