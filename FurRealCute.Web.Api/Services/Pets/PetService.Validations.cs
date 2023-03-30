@@ -17,6 +17,7 @@ public partial class PetService
     {
         ValidatePetIsNotNull(pet);
         ValidatePetId(pet!.Id);
+        ValidatePetRequiredFields(pet);
         ValidatePetAuditFieldsOnModify(pet);
     }
     
