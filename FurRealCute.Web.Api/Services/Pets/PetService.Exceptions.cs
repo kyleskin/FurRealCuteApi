@@ -51,7 +51,15 @@ public partial class PetService
 
     private IQueryable<Pet> TryCatch(ReturningQueryablePetFunction returningQueryablePetFunction)
     {
-        return returningQueryablePetFunction();
+        try
+        {
+            return returningQueryablePetFunction();
+
+        }
+        catch (PostgresException postgresException)
+        {
+            throw CreateAndLogCriticalDependencyException(postgresException);
+        }
     }
 
     private PetValidationException CreateAndLogPetValidationException(Exception exception)
