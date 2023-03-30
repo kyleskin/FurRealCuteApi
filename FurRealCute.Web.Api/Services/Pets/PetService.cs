@@ -32,6 +32,8 @@ public partial class PetService : IPetService
     public ValueTask<Pet?> RetrievePetByIdAsync(Guid id) =>
     TryCatch(async () =>
     {
+        ValidatePetId(id);
+        
         return await _storageBroker.SelectPetByIdAsync(id);
     });
 }
