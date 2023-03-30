@@ -1,7 +1,7 @@
 using FurRealCute.Web.Api.Brokers.DateTimeBroker;
 using FurRealCute.Web.Api.Brokers.Logging;
 using FurRealCute.Web.Api.Models.Pets;
-using FurRealCute.Web.Api.Storage;
+using IStorageBroker = FurRealCute.Web.Api.Brokers.Storages.IStorageBroker;
 
 namespace FurRealCute.Web.Api.Services.Pets;
 

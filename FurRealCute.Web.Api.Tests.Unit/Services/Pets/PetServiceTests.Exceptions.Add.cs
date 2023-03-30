@@ -1,4 +1,3 @@
-using FluentAssertions;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
 using Microsoft.EntityFrameworkCore;

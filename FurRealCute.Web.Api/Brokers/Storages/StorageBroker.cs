@@ -1,7 +1,7 @@
 using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurRealCute.Web.Api.Storage;
+namespace FurRealCute.Web.Api.Brokers.Storages;
 
 public partial class StorageBroker : DbContext, IStorageBroker
 {

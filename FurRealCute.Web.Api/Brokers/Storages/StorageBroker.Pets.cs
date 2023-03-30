@@ -2,7 +2,7 @@ using FurRealCute.Web.Api.Models.Pets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace FurRealCute.Web.Api.Storage;
+namespace FurRealCute.Web.Api.Brokers.Storages;
 
 public partial class StorageBroker
 {
@@ -10,7 +10,7 @@ public partial class StorageBroker
     
     public async ValueTask<Pet> InsertPetAsync(Pet pet)
     {
-        StorageBroker broker = new(_configuration);
+        Brokers.Storages.StorageBroker broker = new(_configuration);
         EntityEntry<Pet> petEntityEntry = await broker.Pets.AddAsync(entity: pet);
         await broker.SaveChangesAsync();
 

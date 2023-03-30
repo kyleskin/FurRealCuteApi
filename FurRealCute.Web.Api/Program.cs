@@ -1,6 +1,7 @@
 using FurRealCute.Web.Api.Brokers.DateTimeBroker;
 using FurRealCute.Web.Api.Brokers.Logging;
-using FurRealCute.Web.Api.Storage;
+using IStorageBroker = FurRealCute.Web.Api.Brokers.Storages.IStorageBroker;
+using StorageBroker = FurRealCute.Web.Api.Brokers.Storages.StorageBroker;
 
 var builder = WebApplication.CreateBuilder(args);
 
