@@ -37,4 +37,38 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public void ShouldThrowServiceExceptionOnRetrieveAllWhenExceptionOccursAndLogIt()
+    {
+        // Arrange
+        Exception serviceException = new();
+
+        FailedPetServiceException failedPetServiceException = new(serviceException);
+
+        PetServiceException expectedPetServiceException = new(failedPetServiceException);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.SelectAllPets())
+            .Throws(serviceException);
+        
+        // Act
+        Action retrieveAllPetsAction = () => _petService.RetrieveAllPets();
+        
+        // Assert
+        Assert.Throws<PetServiceException>(retrieveAllPetsAction);
+        
+        _loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedPetServiceException))),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker =>
+            broker.SelectAllPets(),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+
+    }
 }
