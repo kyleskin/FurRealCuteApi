@@ -140,7 +140,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
     
         // Act
-        ValueTask<Pet?> modifyPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
     
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -171,7 +171,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
     
         // Act
-        ValueTask<Pet?> modifyPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
     
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -202,7 +202,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet?> modifyPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -233,7 +233,37 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet?> modifyPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => 
+            modifyPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+    
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnModifyWhenCreatedDateIsSameAsUpdatedDateAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.UpdatedDate), 
+            parameterValue: inputPet.UpdatedDate);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+        
+        // Act
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 

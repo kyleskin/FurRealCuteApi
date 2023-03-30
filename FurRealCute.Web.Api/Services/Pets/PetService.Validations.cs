@@ -108,10 +108,30 @@ public partial class PetService
     {
         switch (pet)
         {
+            case { } when IsInvalid(pet.CreatedDate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.CreatedDate),
+                    parameterValue: pet.CreatedDate);
+            
+            case { } when IsInvalid(pet.UpdatedDate):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedDate),
+                    parameterValue: pet.UpdatedDate);
+            
             case { } when IsInvalid(pet.CreatedBy):
                 throw new InvalidPetException(
-                    parameterName: nameof(pet.CreatedBy),
+                    parameterName: nameof(Pet.CreatedBy),
                     parameterValue: pet.CreatedBy);
+            
+            case { } when IsInvalid(pet.UpdatedBy):
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedBy),
+                    parameterValue: pet.UpdatedBy);
+            
+            case { } when pet.UpdatedDate == pet.CreatedDate:
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedDate),
+                    parameterValue: pet.UpdatedDate);
         }
     }
 
