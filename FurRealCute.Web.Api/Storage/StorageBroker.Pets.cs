@@ -10,7 +10,7 @@ public partial class StorageBroker
     
     public async ValueTask<Pet> InsertPetAsync(Pet pet)
     {
-        var broker = new StorageBroker(_configuration);
+        StorageBroker broker = new(_configuration);
         EntityEntry<Pet> petEntityEntry = await broker.Pets.AddAsync(entity: pet);
         await broker.SaveChangesAsync();
 

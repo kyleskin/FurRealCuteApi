@@ -8,6 +8,7 @@ using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Services.Pets;
 using FurRealCute.Web.Api.Storage;
 using Moq;
+using Npgsql;
 
 namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 
@@ -64,8 +65,8 @@ public partial class PetServiceTests
             && actualException.InnerException!.Message == expectedException.InnerException!.Message;
     }
 
-    private static DbException GetDbException() =>
-        (DbException)FormatterServices.GetUninitializedObject(typeof(DbException));
+    private static PostgresException GetPostgresException() =>
+        (PostgresException)FormatterServices.GetUninitializedObject(typeof(PostgresException));
     
     private static Faker<Pet> CreateRandomPetFiller(DateTimeOffset dateTime)
     {

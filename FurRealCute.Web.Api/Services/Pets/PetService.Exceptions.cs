@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data.SqlTypes;
 using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
@@ -27,6 +28,10 @@ public partial class PetService
         {
             throw CreateAndLogPetValidationException(invalidPetException);
         }
+        catch (DbException dbException)
+        {
+            throw CreateAndLogCriticalDependencyException(dbException);
+        }
         catch (UniqueConstraintException uniqueConstraintException)
         {
             DuplicatePetException duplicatePetException = new(uniqueConstraintException);
@@ -45,5 +50,13 @@ public partial class PetService
         _loggingBroker.LogError(petValidationException);
 
         return petValidationException;
+    }
+
+    private PetDependencyException CreateAndLogCriticalDependencyException(Exception exception)
+    {
+        PetDependencyException petDependencyException = new(exception);
+        _loggingBroker.LogCritical(petDependencyException);
+
+        return petDependencyException;
     }
 }
