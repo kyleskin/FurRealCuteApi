@@ -11,7 +11,6 @@ public partial class PetServiceTests
     {
         // Arrange
         PostgresException postgresException = GetPostgresException();
-
         PetDependencyException expectedPetDependencyException = new(postgresException);
 
         _storageBrokerMock.Setup(broker =>
@@ -43,9 +42,7 @@ public partial class PetServiceTests
     {
         // Arrange
         Exception serviceException = new();
-
         FailedPetServiceException failedPetServiceException = new(serviceException);
-
         PetServiceException expectedPetServiceException = new(failedPetServiceException);
 
         _storageBrokerMock.Setup(broker =>
@@ -69,6 +66,5 @@ public partial class PetServiceTests
         _dateTimeBrokerMock.VerifyNoOtherCalls();
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
-
     }
 }
