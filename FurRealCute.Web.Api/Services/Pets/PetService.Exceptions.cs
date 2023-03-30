@@ -1,5 +1,4 @@
 using System.Data.Common;
-using System.Data.SqlTypes;
 using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
@@ -27,6 +26,10 @@ public partial class PetService
         catch (InvalidPetException invalidPetException)
         {
             throw CreateAndLogPetValidationException(invalidPetException);
+        }
+        catch (NotFoundPetException notFoundPetException)
+        {
+            throw CreateAndLogPetValidationException(notFoundPetException);
         }
         catch (DbException dbException)
         {

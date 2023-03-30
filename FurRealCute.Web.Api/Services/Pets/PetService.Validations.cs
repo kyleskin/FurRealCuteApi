@@ -95,6 +95,12 @@ public partial class PetService
                     parameterValue: pet.CreatedDate);
         }
     }
+
+    private static void ValidatePetStorage(Pet? storagePet, Guid petId)
+    {
+        if (storagePet is null)
+            throw new NotFoundPetException(petId);
+    }
     
     private static bool IsInvalid(Guid petId) => petId == Guid.Empty;
     private static bool IsInvalid(string input) => string.IsNullOrWhiteSpace(input);
