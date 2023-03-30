@@ -60,6 +60,12 @@ public partial class PetService
         {
             throw CreateAndLogCriticalDependencyException(postgresException);
         }
+        catch (Exception exception)
+        {
+            FailedPetServiceException failedPetServiceException = new(exception);
+
+            throw CreateAndLogServiceException(failedPetServiceException);
+        }
     }
 
     private PetValidationException CreateAndLogPetValidationException(Exception exception)
