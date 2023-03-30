@@ -18,7 +18,7 @@ public partial class PetService : IPetService
         _loggingBroker = loggingBroker;
     }
 
-    public ValueTask<Pet> CreatePetAsync(Pet? pet) =>
+    public ValueTask<Pet?> CreatePetAsync(Pet? pet) =>
     TryCatch(async () =>
     {
         ValidatePetOnCreate(pet);

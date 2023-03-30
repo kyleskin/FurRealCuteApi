@@ -10,11 +10,11 @@ namespace FurRealCute.Web.Api.Services.Pets;
 
 public partial class PetService
 {
-    private delegate ValueTask<Pet> ReturningPetFunction();
+    private delegate ValueTask<Pet?> ReturningPetFunction();
 
     private delegate IQueryable<Pet> ReturningQueryablePetFunction();
 
-    private async ValueTask<Pet> TryCatch(ReturningPetFunction returningPetFunction)
+    private async ValueTask<Pet?> TryCatch(ReturningPetFunction returningPetFunction)
     {
         try
         {
