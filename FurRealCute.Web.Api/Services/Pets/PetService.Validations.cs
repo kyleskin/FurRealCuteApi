@@ -104,7 +104,7 @@ public partial class PetService
         }
     }
 
-    private static void ValidatePetAuditFieldsOnModify(Pet pet)
+    private void ValidatePetAuditFieldsOnModify(Pet pet)
     {
         switch (pet)
         {
@@ -129,6 +129,11 @@ public partial class PetService
                     parameterValue: pet.UpdatedBy);
             
             case { } when pet.UpdatedDate == pet.CreatedDate:
+                throw new InvalidPetException(
+                    parameterName: nameof(Pet.UpdatedDate),
+                    parameterValue: pet.UpdatedDate);
+            
+            case { } when IsNotRecentDate(pet.UpdatedDate):
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.UpdatedDate),
                     parameterValue: pet.UpdatedDate);

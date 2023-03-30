@@ -369,6 +369,10 @@ public partial class PetServiceTests
             broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
             Times.Once);
         
+        _dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTime(),
+            Times.Once);
+        
         _dateTimeBrokerMock.VerifyNoOtherCalls();
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();

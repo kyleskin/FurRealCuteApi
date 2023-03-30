@@ -18,7 +18,7 @@ public partial class PetServiceTests
         Pet afterUpdateStoragePet = inputPet;
         Pet expectedPet = afterUpdateStoragePet;
         Pet beforeUpdateStoragePet = randomPet.DeepClone();
-        inputPet.UpdatedDate = inputPet.UpdatedDate.AddMinutes(randomDays);
+        inputPet.UpdatedDate = inputPet.UpdatedDate.AddMilliseconds(randomDays);
         Guid petId = inputPet.Id;
 
         _storageBrokerMock.Setup(broker =>
@@ -41,6 +41,10 @@ public partial class PetServiceTests
         
         _storageBrokerMock.Verify(broker =>
             broker.SelectPetByIdAsync(petId),
+            Times.Once);
+        
+        _dateTimeBrokerMock.Verify(broker => 
+            broker.GetCurrentDateTime(),
             Times.Once);
 
         _storageBrokerMock.Verify(broker =>
