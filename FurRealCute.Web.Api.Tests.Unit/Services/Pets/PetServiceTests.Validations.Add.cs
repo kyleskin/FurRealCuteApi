@@ -150,11 +150,11 @@ public partial class PetServiceTests
         DateTimeOffset dateTime = GetRandomDateTime();
         Pet randomPet = CreateRandomPet(dateTime);
         Pet inputPet = randomPet;
-        inputPet.Type = default;
+        inputPet.PetType = default;
 
         InvalidPetException invalidPetException = new(
-            parameterName: nameof(Pet.Type),
-            parameterValue: inputPet.Type);
+            parameterName: nameof(Pet.PetType),
+            parameterValue: inputPet.PetType);
 
         PetValidationException expectedPetValidationException = new(invalidPetException);
     

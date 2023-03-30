@@ -1,6 +1,5 @@
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
-using Type = FurRealCute.Web.Api.Models.Pets.Type;
 
 namespace FurRealCute.Web.Api.Services.Pets;
 
@@ -44,10 +43,10 @@ public partial class PetService
                     parameterName: nameof(Pet.Birthdate),
                     parameterValue: pet.Birthdate);
             
-            case { } when IsInvalid(pet.Type):
+            case { } when IsInvalid(pet.PetType):
                 throw new InvalidPetException(
-                    parameterName: nameof(Pet.Type),
-                    parameterValue: pet.Type);
+                    parameterName: nameof(Pet.PetType),
+                    parameterValue: pet.PetType);
             
             case { } when IsInvalid(pet.Size):
                 throw new InvalidPetException(
@@ -104,7 +103,7 @@ public partial class PetService
         return dateTime > DateTimeOffset.UtcNow
             || dateTime == default;
     }
-    private static bool IsInvalid(Type type) => type == default;
+    private static bool IsInvalid(PetType type) => type == default;
     private static bool IsInvalid(Size size) => size == default;
 
     private bool IsNotRecentDate(DateTimeOffset dateTime)

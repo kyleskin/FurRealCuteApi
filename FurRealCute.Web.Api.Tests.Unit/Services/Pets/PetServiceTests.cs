@@ -6,7 +6,6 @@ using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Services.Pets;
 using FurRealCute.Web.Api.Storage;
 using Moq;
-using Type = FurRealCute.Web.Api.Models.Pets.Type;
 
 namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 
@@ -65,7 +64,7 @@ public partial class PetServiceTests
             .RuleFor(p => p.Id, f => Guid.NewGuid())
             .RuleFor(p => p.Name, f => f.Name.FirstName())
             .RuleFor(p => p.Birthdate, f => dateTime.AddDays(-1))
-            .RuleFor(p => p.Type, f => f.PickRandom<Type>())
+            .RuleFor(p => p.PetType, f => f.PickRandom<PetType>())
             .RuleFor(p => p.Size, f => f.PickRandom<Size>())
             .RuleFor(p => p.CreatedDate, f => dateTime)
             .RuleFor(p => p.UpdatedDate, (f, p) => p.CreatedDate)
