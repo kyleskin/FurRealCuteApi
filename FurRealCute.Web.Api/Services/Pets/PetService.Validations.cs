@@ -16,6 +16,7 @@ public partial class PetService
     private void ValidatePetOnModify(Pet? pet)
     {
         ValidatePetIsNotNull(pet);
+        ValidatePetId(pet!.Id);
     }
     
     private static void ValidatePetIsNotNull(Pet? pet)
