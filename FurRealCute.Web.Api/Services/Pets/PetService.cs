@@ -25,4 +25,7 @@ public partial class PetService : IPetService
         
         return await _storageBroker.InsertPetAsync(pet!);
     });
+
+    public IQueryable<Pet> RetrieveAllPets() =>
+    TryCatch(() => _storageBroker.SelectAllPets());
 }

@@ -8,20 +8,20 @@ namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 public partial class PetServiceTests
 {
     [Fact]
-    public async Task ShouldRetrieveAllPets()
+    public void ShouldRetrieveAllPets()
     {
         // Arrange
         DateTimeOffset dateTime = GetRandomDateTime();
-        IQueryable<Pet> randomPets = CreateRandomPets();
+        IQueryable<Pet> randomPets = CreateRandomPets(dateTime);
         IQueryable<Pet> storagePets = randomPets;
         IQueryable<Pet> expectedPets = storagePets;
 
         _storageBrokerMock.Setup(broker =>
-                broker.SelectAllPets().Result)
+                broker.SelectAllPets())
             .Returns(storagePets);
         
         // Act
-        IQueryable<Pet> actualPets = await _petService.RetrieveAllPetsAsync();
+        IQueryable<Pet> actualPets = _petService.RetrieveAllPets();
         
         // Assert
         actualPets.Should().BeEquivalentTo(expectedPets);

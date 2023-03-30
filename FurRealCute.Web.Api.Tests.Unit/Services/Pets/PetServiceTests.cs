@@ -17,6 +17,7 @@ public partial class PetServiceTests
     private readonly IPetService _petService;
     
     private static readonly Random Random = new();
+    private static readonly Faker Faker = new();
 
     public PetServiceTests()
     {
@@ -50,6 +51,9 @@ public partial class PetServiceTests
     
     private static Pet CreateRandomPet(DateTimeOffset dateTime) =>
         CreateRandomPetFiller(dateTime).Generate();
+
+    private static IQueryable<Pet> CreateRandomPets(DateTimeOffset dateTime) =>
+        CreateRandomPetFiller(dateTime).Generate(Faker.Random.Number(3)).AsQueryable();
 
     private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
     {

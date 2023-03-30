@@ -16,4 +16,6 @@ public partial class StorageBroker
 
         return petEntityEntry.Entity;
     }
+
+    public IQueryable<Pet> SelectAllPets() => Pets;
 }

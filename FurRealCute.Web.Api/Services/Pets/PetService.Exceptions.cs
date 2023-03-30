@@ -11,6 +11,8 @@ public partial class PetService
 {
     private delegate ValueTask<Pet> ReturningPetFunction();
 
+    private delegate IQueryable<Pet> ReturningQueryablePetFunction();
+
     private async ValueTask<Pet> TryCatch(ReturningPetFunction returningPetFunction)
     {
         try
@@ -30,6 +32,11 @@ public partial class PetService
             DuplicatePetException duplicatePetException = new(uniqueConstraintException);
             throw CreateAndLogPetValidationException(duplicatePetException);
         }
+    }
+
+    private IQueryable<Pet> TryCatch(ReturningQueryablePetFunction returningQueryablePetFunction)
+    {
+        return returningQueryablePetFunction();
     }
 
     private PetValidationException CreateAndLogPetValidationException(Exception exception)
