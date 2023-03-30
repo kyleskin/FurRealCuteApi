@@ -10,7 +10,7 @@ public partial class StorageBroker
     
     public async ValueTask<Pet> InsertPetAsync(Pet pet)
     {
-        Brokers.Storages.StorageBroker broker = new(_configuration);
+        StorageBroker broker = new(_configuration);
         EntityEntry<Pet> petEntityEntry = await broker.Pets.AddAsync(entity: pet);
         await broker.SaveChangesAsync();
 
@@ -18,4 +18,12 @@ public partial class StorageBroker
     }
 
     public IQueryable<Pet> SelectAllPets() => Pets;
+
+    public async ValueTask<Pet?> SelectPetByIdAsync(Guid id)
+    {
+        StorageBroker broker = new(_configuration);
+        broker.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+        return await broker.Pets.FindAsync(id);
+    }
 }

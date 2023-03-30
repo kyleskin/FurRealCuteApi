@@ -28,4 +28,10 @@ public partial class PetService : IPetService
 
     public IQueryable<Pet> RetrieveAllPets() =>
     TryCatch(() => _storageBroker.SelectAllPets());
+
+    public ValueTask<Pet?> RetrievePetByIdAsync(Guid id) =>
+    TryCatch(async () =>
+    {
+        return await _storageBroker.SelectPetByIdAsync(id);
+    });
 }

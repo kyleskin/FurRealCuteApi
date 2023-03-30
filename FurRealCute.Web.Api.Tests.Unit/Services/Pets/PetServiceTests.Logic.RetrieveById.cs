@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FurRealCute.Web.Api.Models.Pets;
+using Moq;
 
 namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 
@@ -21,14 +22,14 @@ public partial class PetServiceTests
             .Returns(storagePet);
         
         // Act
-        Pet actualPet = await _petService.RetrievePetByIdAsync(inputPetId);
+        Pet? actualPet = await _petService.RetrievePetByIdAsync(inputPetId);
         
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);
         
-        _storageBrokerMock.Verify(broker =>
-            broker.SelectPetByIdAsync(inputPetId),
-            Times.Once);
+       _storageBrokerMock.Verify(broker =>
+           broker.SelectPetByIdAsync(inputPetId),
+           Times.Once);
         
         _dateTimeBrokerMock.VerifyNoOtherCalls();
         _loggingBrokerMock.VerifyNoOtherCalls();
