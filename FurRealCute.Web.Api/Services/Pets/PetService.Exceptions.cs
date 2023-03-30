@@ -37,6 +37,10 @@ public partial class PetService
             DuplicatePetException duplicatePetException = new(uniqueConstraintException);
             throw CreateAndLogPetValidationException(duplicatePetException);
         }
+        catch (DbUpdateException dbUpdateException)
+        {
+            throw CreateAndLogDependencyException(dbUpdateException);
+        }
     }
 
     private IQueryable<Pet> TryCatch(ReturningQueryablePetFunction returningQueryablePetFunction)
@@ -56,6 +60,14 @@ public partial class PetService
     {
         PetDependencyException petDependencyException = new(exception);
         _loggingBroker.LogCritical(petDependencyException);
+
+        return petDependencyException;
+    }
+
+    private PetDependencyException CreateAndLogDependencyException(Exception exception)
+    {
+        PetDependencyException petDependencyException = new(exception);
+        _loggingBroker.LogError(petDependencyException);
 
         return petDependencyException;
     }
