@@ -41,6 +41,12 @@ public partial class PetService
         {
             throw CreateAndLogDependencyException(dbUpdateException);
         }
+        catch (Exception exception)
+        {
+            FailedPetServiceException failedPetServiceException = new(exception);
+
+            throw CreateAndLogServiceException(failedPetServiceException);
+        }
     }
 
     private IQueryable<Pet> TryCatch(ReturningQueryablePetFunction returningQueryablePetFunction)
@@ -70,5 +76,13 @@ public partial class PetService
         _loggingBroker.LogError(petDependencyException);
 
         return petDependencyException;
+    }
+
+    private PetServiceException CreateAndLogServiceException(Exception exception)
+    {
+        PetServiceException petServiceException = new(exception);
+        _loggingBroker.LogError(petServiceException);
+
+        return petServiceException;
     }
 }
