@@ -28,7 +28,7 @@ public partial class PetServiceTests
             .ThrowsAsync(postgresException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetDependencyException>(() =>
@@ -73,7 +73,7 @@ public partial class PetServiceTests
             .ThrowsAsync(databaseUpdateException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetDependencyException>(() =>
@@ -118,7 +118,7 @@ public partial class PetServiceTests
             .ThrowsAsync(serviceException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetServiceException>(() => createPetTask.AsTask());

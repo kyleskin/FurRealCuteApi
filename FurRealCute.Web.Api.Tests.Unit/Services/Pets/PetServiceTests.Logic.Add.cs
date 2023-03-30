@@ -25,7 +25,7 @@ public partial class PetServiceTests
             .ReturnsAsync(storagePet);
 
         // Act
-        Pet actualPet = await _petService.CreatePetAsync(inputPet);
+        Pet? actualPet = await _petService.CreatePetAsync(inputPet);
 
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);

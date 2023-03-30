@@ -2,7 +2,6 @@ using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
 using Moq;
-using Npgsql;
 
 namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 
@@ -19,7 +18,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(nullPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(invalidPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(invalidPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -55,7 +54,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetInputException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -93,7 +92,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetInputException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -128,7 +127,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
 
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
 
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -159,7 +158,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
     
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
     
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -190,7 +189,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
     
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
     
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -221,7 +220,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -252,7 +251,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -283,7 +282,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -314,7 +313,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -345,7 +344,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -376,7 +375,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => 
@@ -412,7 +411,7 @@ public partial class PetServiceTests
             broker.GetCurrentDateTime()).Returns(dateTime);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(inputPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(inputPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
@@ -450,7 +449,7 @@ public partial class PetServiceTests
             broker.InsertPetAsync(existingPet)).ThrowsAsync(uniqueConstraintException);
         
         // Act
-        ValueTask<Pet> createPetTask = _petService.CreatePetAsync(existingPet);
+        ValueTask<Pet?> createPetTask = _petService.CreatePetAsync(existingPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() =>
