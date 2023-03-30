@@ -1,3 +1,4 @@
+using Bogus.DataSets;
 using FurRealCute.Web.Api.Models.Pets;
 using FurRealCute.Web.Api.Models.Pets.Exceptions;
 using Moq;
@@ -15,7 +16,7 @@ public partial class PetServiceTests
         PetValidationException expectedPetValidationException = new(nullPetException);
         
         // Act
-        ValueTask<Pet> modifyPetTask = _petService.ModifyPetAsync(invalidPet);
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(invalidPet);
         
         // Assert
         await Assert.ThrowsAsync<PetValidationException>(() => modifyPetTask.AsTask());
@@ -75,6 +76,36 @@ public partial class PetServiceTests
         InvalidPetException invalidPetException = new(
             parameterName: nameof(Pet.Name),
             parameterValue: inputPet.Name);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+        
+        // Act
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => modifyPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnModifyWhenPetBirthdateIsInvalidAndLogItAsync()
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.Birthdate = DateTimeOffset.Now.AddDays(1);
+
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.Birthdate),
+            parameterValue: inputPet.Birthdate);
 
         PetValidationException expectedPetValidationException = new(invalidPetException);
         
