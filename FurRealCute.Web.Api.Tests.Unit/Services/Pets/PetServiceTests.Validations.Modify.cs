@@ -60,6 +60,39 @@ public partial class PetServiceTests
         _storageBrokerMock.VerifyNoOtherCalls();
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task ShouldThrowValidationExceptionOnModifyWhenPetNameIsInvalidAndLogItAsync(string invalidName)
+    {
+        // Arrange
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet inputPet = randomPet;
+        inputPet.Name = invalidName;
+
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.Name),
+            parameterValue: inputPet.Name);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+        
+        // Act
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => modifyPetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
+
     [Fact]
     public async Task ShouldThrowValidationExceptionOnModifyWhenCreatedByIsInvalidAndLogItAsync()
     {
