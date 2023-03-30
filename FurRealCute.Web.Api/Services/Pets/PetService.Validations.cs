@@ -17,6 +17,7 @@ public partial class PetService
     {
         ValidatePetIsNotNull(pet);
         ValidatePetId(pet!.Id);
+        ValidatePetAuditFieldsOnModify(pet);
     }
     
     private static void ValidatePetIsNotNull(Pet? pet)
@@ -99,6 +100,17 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(Pet.CreatedDate),
                     parameterValue: pet.CreatedDate);
+        }
+    }
+
+    private static void ValidatePetAuditFieldsOnModify(Pet pet)
+    {
+        switch (pet)
+        {
+            case { } when IsInvalid(pet.CreatedBy):
+                throw new InvalidPetException(
+                    parameterName: nameof(pet.CreatedBy),
+                    parameterValue: pet.CreatedBy);
         }
     }
 
