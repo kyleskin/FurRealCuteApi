@@ -38,4 +38,12 @@ public partial class PetService : IPetService
 
         return storagePet;
     });
+
+    public ValueTask<Pet?> ModifyPetAsync(Pet pet) =>
+    TryCatch(async () =>
+    {
+        Pet? existingPet = await _storageBroker.SelectPetByIdAsync(pet.Id);
+        
+        return await _storageBroker.UpdatePetAsync(pet);
+    });
 }

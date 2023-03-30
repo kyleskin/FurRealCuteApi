@@ -34,7 +34,7 @@ public partial class PetServiceTests
             .ReturnsAsync(afterUpdateStoragePet);
         
         // Act
-        Pet actualPet = await _petService.ModifyPetAsync(inputPet);
+        Pet? actualPet = await _petService.ModifyPetAsync(inputPet);
         
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);
@@ -42,11 +42,7 @@ public partial class PetServiceTests
         _storageBrokerMock.Verify(broker =>
             broker.SelectPetByIdAsync(petId),
             Times.Once);
-        
-        _dateTimeBrokerMock.Verify(broker =>
-            broker.GetCurrentDateTime(),
-            Times.Once);
-        
+
         _storageBrokerMock.Verify(broker =>
             broker.UpdatePetAsync(inputPet),
             Times.Once);

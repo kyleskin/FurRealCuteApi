@@ -7,4 +7,5 @@ public interface IPetService
     ValueTask<Pet?> CreatePetAsync(Pet? pet);
     IQueryable<Pet> RetrieveAllPets();
     ValueTask<Pet?> RetrievePetByIdAsync(Guid id);
+    ValueTask<Pet?> ModifyPetAsync(Pet pet);
 }

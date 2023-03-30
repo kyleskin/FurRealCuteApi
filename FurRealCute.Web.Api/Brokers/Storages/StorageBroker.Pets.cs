@@ -26,4 +26,13 @@ public partial class StorageBroker
 
         return await broker.Pets.FindAsync(id);
     }
+
+    public async ValueTask<Pet> UpdatePetAsync(Pet pet)
+    {
+        StorageBroker broker = new(_configuration);
+        EntityEntry<Pet> petEntityEntry = broker.Pets.Update(entity: pet);
+        await broker.SaveChangesAsync();
+
+        return petEntityEntry.Entity;
+    }
 }
