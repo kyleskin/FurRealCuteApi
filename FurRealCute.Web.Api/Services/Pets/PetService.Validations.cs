@@ -140,7 +140,7 @@ public partial class PetService
         }
     }
 
-    private static void ValidatePetStorage(Pet? storagePet, Guid petId)
+    private static void ValidateStoragePet(Pet? storagePet, Guid petId)
     {
         if (storagePet is null)
             throw new NotFoundPetException(petId);

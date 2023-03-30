@@ -34,7 +34,7 @@ public partial class PetService : IPetService
     {
         ValidatePetId(id);
         Pet? storagePet = await _storageBroker.SelectPetByIdAsync(id); 
-        ValidatePetStorage(storagePet, id);
+        ValidateStoragePet(storagePet, id);
 
         return storagePet;
     });
@@ -44,6 +44,7 @@ public partial class PetService : IPetService
     {
         ValidatePetOnModify(pet);
         Pet? existingPet = await _storageBroker.SelectPetByIdAsync(pet!.Id);
+        ValidateStoragePet(existingPet, pet.Id);
         
         return await _storageBroker.UpdatePetAsync(pet);
     });

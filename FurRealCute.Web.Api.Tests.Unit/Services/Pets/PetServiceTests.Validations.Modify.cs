@@ -377,4 +377,49 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnModifyIfPetDoesntExistAndLogItAsync()
+    {
+        // Arrange
+        int randomNegativeMinutes = GetNegativeRandomNumber();
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet nonExistentPet = randomPet;
+        nonExistentPet.CreatedDate = dateTime.AddMinutes(randomNegativeMinutes);
+        Pet? nullPet = null;
+
+        NotFoundPetException notFoundPetException = new(nonExistentPet.Id);
+        PetValidationException expectedPetValidationException = new(notFoundPetException);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.SelectPetByIdAsync(nonExistentPet.Id))
+            .ReturnsAsync(nullPet);
+
+        _dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+            .Returns(dateTime);
+        
+        // Act
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(nonExistentPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => modifyPetTask.AsTask());
+        
+        _dateTimeBrokerMock.Verify(broker =>
+            broker.GetCurrentDateTime(),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker =>
+            broker.SelectPetByIdAsync(nonExistentPet.Id),
+            Times.Once);
+        
+        _loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
