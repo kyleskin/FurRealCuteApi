@@ -1,4 +1,6 @@
+using System.Data.Common;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Bogus;
 using FurRealCute.Web.Api.Brokers.DateTimeBroker;
 using FurRealCute.Web.Api.Brokers.Logging;
@@ -61,6 +63,9 @@ public partial class PetServiceTests
             actualException.Message == expectedException.Message
             && actualException.InnerException!.Message == expectedException.InnerException!.Message;
     }
+
+    private static DbException GetDbException() =>
+        (DbException)FormatterServices.GetUninitializedObject(typeof(DbException));
     
     private static Faker<Pet> CreateRandomPetFiller(DateTimeOffset dateTime)
     {
