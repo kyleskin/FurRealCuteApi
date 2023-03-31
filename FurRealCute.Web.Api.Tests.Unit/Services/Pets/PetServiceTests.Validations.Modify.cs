@@ -471,4 +471,55 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedByNotSameAsCreatedByAndLogItAsync()
+    {
+        // Arrange
+        int randomNumber = GetNegativeRandomNumber();
+        int randomMinutes = randomNumber;
+        Guid differentCreatedBy = Guid.NewGuid();
+        DateTimeOffset dateTime = GetRandomDateTime();
+        Pet randomPet = CreateRandomPet(dateTime);
+        Pet invalidPet = randomPet;
+        invalidPet.CreatedDate = invalidPet.CreatedDate.AddMinutes(randomMinutes);
+        Pet storagePet = invalidPet.DeepClone();
+        invalidPet.CreatedBy = differentCreatedBy;
+        Guid petId = invalidPet.Id;
+
+        InvalidPetException invalidPetException = new(
+            parameterName: nameof(Pet.CreatedBy),
+            parameterValue: invalidPet.CreatedBy);
+
+        PetValidationException expectedPetValidationException = new(invalidPetException);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.SelectPetByIdAsync(petId))
+            .ReturnsAsync(storagePet);
+
+        _dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+            .Returns(dateTime);
+        
+        // Act
+        ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(invalidPet);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetValidationException>(() => modifyPetTask.AsTask());
+        
+        _dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker => 
+            broker.SelectPetByIdAsync(petId));
+        
+        _loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedPetValidationException))),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
