@@ -160,7 +160,8 @@ public partial class PetServiceTests
         inputPet.CreatedDate = inputPet.CreatedDate.AddMinutes(randomMinutes);
 
         Exception serviceException = new();
-        PetDependencyException expectedDependencyException = new(serviceException);
+        FailedPetServiceException failedPetServiceException = new(serviceException);
+        PetServiceException expectedPetServiceException = new(failedPetServiceException);
         
         _storageBrokerMock.Setup(broker =>
                 broker.SelectPetByIdAsync(petId))
@@ -174,7 +175,7 @@ public partial class PetServiceTests
         ValueTask<Pet?> modifyPetTask = _petService.ModifyPetAsync(inputPet);
         
         // Assert
-        await Assert.ThrowsAsync<PetDependencyException>(() => modifyPetTask.AsTask());
+        await Assert.ThrowsAsync<PetServiceException>(() => modifyPetTask.AsTask());
         
         _dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
@@ -185,7 +186,7 @@ public partial class PetServiceTests
             Times.Once);
         
         _loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedDependencyException))),
+                broker.LogError(It.Is(SameExceptionAs(expectedPetServiceException))),
             Times.Once);
         
         _dateTimeBrokerMock.VerifyNoOtherCalls();
