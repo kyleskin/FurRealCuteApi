@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 using EntityFramework.Exceptions.Common;
 using FurRealCute.Web.Api.Models.Pets;
@@ -43,6 +44,10 @@ public partial class PetService
         catch (DbUpdateException dbUpdateException)
         {
             throw CreateAndLogDependencyException(dbUpdateException);
+        }
+        catch (DBConcurrencyException dbConcurrencyException)
+        {
+            throw CreateAndLogDependencyException(dbConcurrencyException);
         }
         catch (Exception exception)
         {
