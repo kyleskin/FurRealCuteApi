@@ -148,6 +148,11 @@ public partial class PetService
                 throw new InvalidPetException(
                     parameterName: nameof(inputPet.CreatedDate),
                     parameterValue: inputPet.CreatedDate);
+            
+            case { } when inputPet.CreatedBy != storagePet.CreatedBy:
+                throw new InvalidPetException(
+                    parameterName: nameof(inputPet.CreatedBy),
+                    parameterValue: inputPet.CreatedBy);
         }
     }
 
