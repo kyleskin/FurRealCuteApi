@@ -140,6 +140,17 @@ public partial class PetService
         }
     }
 
+    private static void ValidateAgainstStoragePetOnModify(Pet inputPet, Pet storagePet)
+    {
+        switch (inputPet)
+        {
+            case { } when inputPet.CreatedDate != storagePet.CreatedDate:
+                throw new InvalidPetException(
+                    parameterName: nameof(inputPet.CreatedDate),
+                    parameterValue: inputPet.CreatedDate);
+        }
+    }
+
     private static void ValidateStoragePet(Pet? storagePet, Guid petId)
     {
         if (storagePet is null)
