@@ -45,7 +45,7 @@ public partial class PetService : IPetService
         ValidatePetOnModify(pet);
         Pet? existingPet = await _storageBroker.SelectPetByIdAsync(pet!.Id);
         ValidateStoragePet(existingPet, pet.Id);
-        ValidateAgainstStoragePetOnModify(inputPet: pet, storagePet: existingPet);
+        ValidateAgainstStoragePetOnModify(inputPet: pet, storagePet: existingPet!);
         
         return await _storageBroker.UpdatePetAsync(pet);
     });

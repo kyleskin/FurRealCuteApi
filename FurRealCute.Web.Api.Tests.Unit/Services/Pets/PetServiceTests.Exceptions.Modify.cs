@@ -16,13 +16,14 @@ public partial class PetServiceTests
         DateTimeOffset dateTime = GetRandomDateTime();
         Pet randomPet = CreateRandomPet(dateTime);
         Pet inputPet = randomPet;
+        Guid petId = inputPet.Id;
         inputPet.CreatedDate = inputPet.CreatedDate.AddMinutes(randomMinutes);
 
         PostgresException postgresException = GetPostgresException();
         PetDependencyException expectedDependencyException = new(postgresException);
 
         _storageBrokerMock.Setup(broker =>
-                broker.UpdatePetAsync(inputPet))
+                broker.SelectPetByIdAsync(petId))
             .ThrowsAsync(postgresException);
 
         _dateTimeBrokerMock.Setup(broker =>
