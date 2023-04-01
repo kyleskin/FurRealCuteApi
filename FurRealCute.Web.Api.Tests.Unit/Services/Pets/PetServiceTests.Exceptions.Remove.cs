@@ -74,4 +74,37 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+    
+    [Fact]
+    public async Task ShouldThrowDependencyExceptionOnRemoveWhenDbConcurrencyExceptionOccursAndLogItAsync()
+    {
+        // Arrange
+        Guid randomId = Guid.NewGuid();
+        Guid inputId = randomId;
+
+        DbUpdateConcurrencyException dbUpdateConcurrencyException = new();
+        PetDependencyException expectedPetDependencyException = new(dbUpdateConcurrencyException);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.SelectPetByIdAsync(inputId))
+            .ThrowsAsync(dbUpdateConcurrencyException);
+        
+        // Act
+        ValueTask<Pet> removePetTask = _petService.RemovePetByIdAsync(inputId);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetDependencyException>(() => removePetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedPetDependencyException))),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker =>
+                broker.SelectPetByIdAsync(inputId),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
