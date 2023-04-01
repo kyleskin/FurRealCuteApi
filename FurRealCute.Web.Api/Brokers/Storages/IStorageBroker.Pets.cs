@@ -8,4 +8,5 @@ public partial interface IStorageBroker
     IQueryable<Pet> SelectAllPets();
     ValueTask<Pet?> SelectPetByIdAsync(Guid id);
     ValueTask<Pet> UpdatePetAsync(Pet pet);
+    ValueTask<Pet> DeletePetAsync(Pet pet);
 }

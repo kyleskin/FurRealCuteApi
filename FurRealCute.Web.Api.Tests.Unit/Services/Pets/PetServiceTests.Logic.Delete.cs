@@ -25,7 +25,7 @@ public partial class PetServiceTests
             .ReturnsAsync(expectedPet);
         
         // Act
-        Pet actualPet = _petService.RemovePetByIdAsync(petId);
+        Pet actualPet = await _petService.RemovePetByIdAsync(petId);
         
         // Assert
         actualPet.Should().BeEquivalentTo(expectedPet);

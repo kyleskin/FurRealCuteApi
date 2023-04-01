@@ -8,4 +8,5 @@ public interface IPetService
     IQueryable<Pet> RetrieveAllPets();
     ValueTask<Pet?> RetrievePetByIdAsync(Guid id);
     ValueTask<Pet?> ModifyPetAsync(Pet? pet);
+    ValueTask<Pet> RemovePetByIdAsync(Guid id);
 }

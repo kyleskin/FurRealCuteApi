@@ -35,4 +35,13 @@ public partial class StorageBroker
 
         return petEntityEntry.Entity;
     }
+
+    public async ValueTask<Pet> DeletePetAsync(Pet pet)
+    {
+        StorageBroker broker = new(_configuration);
+        EntityEntry<Pet> petEntityEntry = broker.Pets.Remove(entity: pet);
+        await broker.SaveChangesAsync();
+
+        return petEntityEntry.Entity;
+    }
 }
