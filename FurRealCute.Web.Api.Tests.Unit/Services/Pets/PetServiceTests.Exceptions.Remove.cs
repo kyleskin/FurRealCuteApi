@@ -107,4 +107,38 @@ public partial class PetServiceTests
         _loggingBrokerMock.VerifyNoOtherCalls();
         _storageBrokerMock.VerifyNoOtherCalls();
     }
+    
+    [Fact]
+    public async Task ShouldThrowServiceExceptionOnRemoveWhenExceptionOccursAndLogItAsync()
+    {
+        // Arrange
+        Guid randomId = Guid.NewGuid();
+        Guid inputId = randomId;
+
+        Exception serviceException = new();
+        FailedPetServiceException failedPetServiceException = new(serviceException);
+        PetServiceException expectedPetServiceException = new(failedPetServiceException);
+
+        _storageBrokerMock.Setup(broker =>
+                broker.SelectPetByIdAsync(inputId))
+            .ThrowsAsync(serviceException);
+        
+        // Act
+        ValueTask<Pet> removePetTask = _petService.RemovePetByIdAsync(inputId);
+        
+        // Assert
+        await Assert.ThrowsAsync<PetServiceException>(() => removePetTask.AsTask());
+        
+        _loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedPetServiceException))),
+            Times.Once);
+        
+        _storageBrokerMock.Verify(broker =>
+                broker.SelectPetByIdAsync(inputId),
+            Times.Once);
+        
+        _dateTimeBrokerMock.VerifyNoOtherCalls();
+        _loggingBrokerMock.VerifyNoOtherCalls();
+        _storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
