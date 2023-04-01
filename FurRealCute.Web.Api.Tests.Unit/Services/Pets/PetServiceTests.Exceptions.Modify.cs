@@ -10,7 +10,7 @@ namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 public partial class PetServiceTests
 {
     [Fact]
-    public async Task ShowThrowDependencyExceptionOnModifyIfSqlExceptionOccursAndLogItAsync()
+    public async Task ShouldThrowDependencyExceptionOnModifyIfSqlExceptionOccursAndLogItAsync()
     {
         // Arrange
         int randomNumber = GetNegativeRandomNumber();

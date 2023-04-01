@@ -7,7 +7,7 @@ namespace FurRealCute.Web.Api.Tests.Unit.Services.Pets;
 public partial class PetServiceTests
 {
     [Fact]
-    public void ShowThrowDependencyExceptionOnRetrieveAllWhenSqlExceptionOccursAndLogIt()
+    public void ShouldThrowDependencyExceptionOnRetrieveAllWhenSqlExceptionOccursAndLogIt()
     {
         // Arrange
         PostgresException postgresException = GetPostgresException();
