@@ -54,8 +54,8 @@ public partial class PetService : IPetService
     TryCatch(async () =>
     {
         ValidatePetId(id);
-        
         Pet? existingPet = await _storageBroker.SelectPetByIdAsync(id);
+        ValidateStoragePet(existingPet, id);
         return await _storageBroker.DeletePetAsync(existingPet);
     });
 }
